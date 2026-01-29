@@ -33,7 +33,9 @@
 
 This toolkit provides a robust framework for computing effect sizes, pooling meta-analytic estimates, and performing statistical analyses on gene expression datasets. It is designed to identify genes or gene sets with consistent differential expression across multiple studies, supporting biomarker discovery and predictive modeling.
 
-## Key Features:
+
+
+## Key Features 🔑:
 1. # Data Normalization and Batch Correction
   - Mitigates platform-specific variations using batch correction methods, median-centering, and rank-based gene transformations.
   - Ensures comparability of expression measures across studies and platforms.
@@ -53,7 +55,7 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 - Meta-genes can be used to build early diagnostic or prognostic models.
 - Currently supports the ML algorithm, random forest, with customizable training control and optimized hyperparameter tuning grids.
 
-## Applications:
+## Applications 🖥️:
   - Identification of robust biomarkers across independent studies.
   - Construction of predictive models for early diagnosis or prognosis.
   - Insight into consistent molecular responses to conditions or treatments despite study-specific variability.
@@ -68,8 +70,14 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 <img src="VEGFA.jpg" alt="Example 3" width="200">
 
 
+## Include prediction models
 
 
+## Future Directions 🚀:
+  - Include mulitple feature selection methods, deafult seeting is selecting shared genes across platforms before performing meta-analysis.
+  - Additional machine learning algorithms optomized for diverse data types.
+  - User-defined parameters will allow filtering by effect size thresholds and pooled effect size cutoffs.
+  - Planned support for more data soures and processing methods, including ArrayExpress, GEO datasets with multiple platforms per study, and single-cell data.
 
 
 

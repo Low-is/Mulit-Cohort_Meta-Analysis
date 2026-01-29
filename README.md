@@ -1,5 +1,5 @@
-# Pipeline Development - Meta-analysis
-## Effect size estimation, meta-analysis, and statistical testing for gene expression data.
+# Pipeline Development - Multi Cohort Meta-analysis
+## Study level effect size and pooled effect size estimations, inverse variance weighting, and Fisher p-value combinataion.
 
 
 **Standard Deviation (SD)** - measures how spread out individual data points are around the mean.

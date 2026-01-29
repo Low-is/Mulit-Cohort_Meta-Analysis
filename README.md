@@ -70,7 +70,7 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 <img src="VEGFA.jpg" alt="Example 3" width="200">
 
 
-## Include prediction models
+**Include prediction models**
 
 
 ## Future Directions 🚀:

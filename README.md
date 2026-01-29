@@ -68,9 +68,9 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 <!-- Forest plots side by side -->
 <table>
   <tr>
-    <td><img src="BOLA1.jpg" alt="BOLA1" width="250"><br><center>BOLA1</center></td>
-    <td><img src="CYP4F3.jpg" alt="CYP4F3" width="250"><br><center>CYP4F3</center></td>
-    <td><img src="VEGFA.jpg" alt="VEGFA" width="250"><br><center>VEGFA</center></td>
+    <td><img src="BOLA1.jpg" alt="BOLA1" width="250">></td>
+    <td><img src="CYP4F3.jpg" alt="CYP4F3" width="250"></td>
+    <td><img src="VEGFA.jpg" alt="VEGFA" width="250"></td>
   </tr>
 </table>
 

@@ -77,7 +77,6 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 
 ---
 
-**Include prediction models**
 <!-- Prediction models side by side below -->
 <table>
   <tr>

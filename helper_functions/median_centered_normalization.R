@@ -1,3 +1,10 @@
+# USE 
+# Median-center per gene
+median_center <- function(mat) {
+  sweep(mat, 1, apply(mat, 1, median, na.rm = TRUE))
+}
+
+
 gene_medians <- function(expr_mat, genes_of_interest = NULL) {
   
   if (!is.null(genes_of_interest)) {

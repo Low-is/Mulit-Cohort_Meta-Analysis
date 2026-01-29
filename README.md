@@ -62,6 +62,7 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
   - Combinging studies improves statistical power in selecting gene signatures.
 
 
+---
 
 ## Below is an example of the output:
 
@@ -74,9 +75,19 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
   </tr>
 </table>
 
+---
 
 **Include prediction models**
+<!-- Prediction models side by side below -->
+<table>
+  <tr>
+    <td><img src="prediction_model1.jpg" alt="Prediction Model 1" width="250"><br><center>Prediction Model 1</center></td>
+    <td><img src="prediction_model2.jpg" alt="Prediction Model 2" width="250"><br><center>Prediction Model 2</center></td>
+    <td><img src="prediction_model3.jpg" alt="Prediction Model 3" width="250"><br><center>Prediction Model 3</center></td>
+  </tr>
+</table>
 
+---
 
 ## Future Directions 🚀:
   - Include mulitple feature selection methods, deafult seeting is selecting shared genes across platforms before performing meta-analysis.

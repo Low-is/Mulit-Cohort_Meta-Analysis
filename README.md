@@ -81,9 +81,9 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 <!-- Prediction models side by side below -->
 <table>
   <tr>
-    <td><img src="prediction_model1.jpg" alt="Prediction Model 1" width="250"><br><center>Prediction Model 1</center></td>
-    <td><img src="prediction_model2.jpg" alt="Prediction Model 2" width="250"><br><center>Prediction Model 2</center></td>
-    <td><img src="prediction_model3.jpg" alt="Prediction Model 3" width="250"><br><center>Prediction Model 3</center></td>
+    <td><img src="classification_models/DNA_internal.png" alt="Prediction Model 1" width="250"><br><center>Prediction Model 1</center></td>
+    <td><img src="classification_models/DNA_internal_14.png" alt="Prediction Model 2" width="250"><br><center>Prediction Model 2</center></td>
+    <td><img src="classification_models/internal_validation_gse69686.png" alt="Prediction Model 3" width="250"><br><center>Prediction Model 3</center></td>
   </tr>
 </table>
 

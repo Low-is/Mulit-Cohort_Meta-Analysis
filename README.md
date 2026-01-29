@@ -35,23 +35,23 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 
 ## Key Features:
 1. # Data Normalization and Batch Correction
-  · Mitigates platform-specific variations using batch correction methods, median-centering, and rank-based gene transformations.
-  · Ensures comparability of expression measures across studies and platforms.
+  - Mitigates platform-specific variations using batch correction methods, median-centering, and rank-based gene transformations.
+  - Ensures comparability of expression measures across studies and platforms.
 2. # Gene-Level Effect Size Computation
-  · Calculates study-level effects for individual genes using metrics such as Hedge's g and Cohen's d, quantifying the magnitude of expression differences between conditions.
-  · Accounts for study-specfic variance using inverse-variance weigthing to manage heterogeneity across datasets. 
+  - Calculates study-level effects for individual genes using metrics such as Hedge's g and Cohen's d, quantifying the magnitude of expression differences between conditions.
+  - Accounts for study-specfic variance using inverse-variance weigthing to manage heterogeneity across datasets. 
 3. # Meta-Analysis Across Studies
-  · Pools study-level effect sizes on a gene-wise basis.
-  · Combines p-values across studies and adjusts them for multiple testing to control the false discovery rate (FDR).
-  · Produces a list of "meta-genes" consistently associated with the condition or treatment of interest.
+  - Pools study-level effect sizes on a gene-wise basis.
+  - Combines p-values across studies and adjusts them for multiple testing to control the false discovery rate (FDR).
+  - Produces a list of "meta-genes" consistently associated with the condition or treatment of interest.
 4. # Statistical Testing and Visualization
-  · Performs t-tests while accommodating variances assumptions to determine statistical signficance. 
-  · Generates comprehensive outputs, including:
+  - Performs t-tests while accommodating variances assumptions to determine statistical signficance. 
+  - Generates comprehensive outputs, including:
       - Tables with effects sizes, summary effect sizes, p-values,and FDR-adjusted q-values.
       - Forest plots summarizing gene-level and pooled effect sizes.
 5. # Predictive Modeling Integration
-· Meta-genes can be used to build early diagnostic or prognostic models.
-· Currently supports the ML algorithm, random forest, with customizable training control and optimized hyperparameter tuning grids.
+- Meta-genes can be used to build early diagnostic or prognostic models.
+- Currently supports the ML algorithm, random forest, with customizable training control and optimized hyperparameter tuning grids.
 
 ## Applications:
   - Identification of robust biomarkers across independent studies.
@@ -74,12 +74,12 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 
 
 # Citations: 
-· Zheng, H., Rao, A.M., Ganesan, A. et al. Multi-cohort analysis identifies a blood-based immune transcriptomic signature for early lung cancer detection. npj Precis. Onc. 9, 246 (2025).[https://doi.org/10.1038/s41698-025-01043-z](https://doi.org/10.1038/s41698-025-01043-z)
+Zheng, H., Rao, A.M., Ganesan, A. et al. Multi-cohort analysis identifies a blood-based immune transcriptomic signature for early lung cancer detection. npj Precis. Onc. 9, 246 (2025).[https://doi.org/10.1038/s41698-025-01043-z](https://doi.org/10.1038/s41698-025-01043-z)
 
-· Walsh CJ, Batt J, Herridge MS, Mathur S, Bader GD, Hu P, Khatri P, Dos Santos CC. Comprehensive multi-cohort transcriptional meta-analysis of muscle diseases identifies a signature of disease severity. Sci Rep. 2022 Jul 4;12(1):11260.[https://www.nature.com/articles/s41598-022-15003-1](https://www.nature.com/articles/s41598-022-15003-1)
+Walsh CJ, Batt J, Herridge MS, Mathur S, Bader GD, Hu P, Khatri P, Dos Santos CC. Comprehensive multi-cohort transcriptional meta-analysis of muscle diseases identifies a signature of disease severity. Sci Rep. 2022 Jul 4;12(1):11260.[https://www.nature.com/articles/s41598-022-15003-1](https://www.nature.com/articles/s41598-022-15003-1)
 
-· Rashid NU, Li Q, Yeh JJ, Ibrahim JG. Modeling Between-Study Heterogeneity for Improved Replicability in Gene Signature Selection and Clinical Prediction. J Am Stat Assoc. 2020;115(531):1125-1138.[https://pmc.ncbi.nlm.nih.gov/articles/PMC7528965/](https://pmc.ncbi.nlm.nih.gov/articles/PMC7528965/)
+Rashid NU, Li Q, Yeh JJ, Ibrahim JG. Modeling Between-Study Heterogeneity for Improved Replicability in Gene Signature Selection and Clinical Prediction. J Am Stat Assoc. 2020;115(531):1125-1138.[https://pmc.ncbi.nlm.nih.gov/articles/PMC7528965/](https://pmc.ncbi.nlm.nih.gov/articles/PMC7528965/)
 
-· Pollard, Katherine S.; Dudoit, Sandrine; and van der Laan, Mark J., "Multiple Testing Procedures: R multtest Package and Applications to Genomics" (December 2004). U.C. Berkeley Division of Biostatistics Working Paper Series. Working Paper 164.[https://biostats.bepress.com/ucbbiostat/paper164](https://biostats.bepress.com/ucbbiostat/paper164)
+Pollard, Katherine S.; Dudoit, Sandrine; and van der Laan, Mark J., "Multiple Testing Procedures: R multtest Package and Applications to Genomics" (December 2004). U.C. Berkeley Division of Biostatistics Working Paper Series. Working Paper 164.[https://biostats.bepress.com/ucbbiostat/paper164](https://biostats.bepress.com/ucbbiostat/paper164)
 
-· Sweeney TE, Shidham A, Wong HR, Khatri P. A comprehensive time-course-based multicohort analysis of sepsis and sterile inflammation reveals a robust diagnostic gene set. Sci Transl Med. 2015 May 13;7(287):287ra71.[https://www.science.org/doi/10.1126/scitranslmed.aaa5993]([https://doi.org/10.1126/scitranslmed.aaa5993](https://www.science.org/doi/10.1126/scitranslmed.aaa5993))
+Sweeney TE, Shidham A, Wong HR, Khatri P. A comprehensive time-course-based multicohort analysis of sepsis and sterile inflammation reveals a robust diagnostic gene set. Sci Transl Med. 2015 May 13;7(287):287ra71.[https://www.science.org/doi/10.1126/scitranslmed.aaa5993]([https://doi.org/10.1126/scitranslmed.aaa5993](https://www.science.org/doi/10.1126/scitranslmed.aaa5993))

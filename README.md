@@ -66,20 +66,13 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 ## Below is an example of the output:
 
 <!-- Forest plots side by side -->
-<div style="display: flex; gap: 10px; flex-wrap: wrap;">
-  <div style="flex: 1;">
-    <img src="BOLA1.jpg" alt="Example 1" width="300">
-    <p style="text-align:center;">BOLA1</p>
-  </div>
-  <div style="flex: 1;">
-    <img src="CYP4F3.jpg" alt="Example 2" width="300">
-    <p style="text-align:center;">CYP4F3</p>
-  </div>
-  <div style="flex: 1;">
-    <img src="VEGFA.jpg" alt="Example 3" width="300">
-    <p style="text-align:center;">VEGFA</p>
-  </div>
-</div>
+<table>
+  <tr>
+    <td><img src="BOLA1.jpg" alt="BOLA1" width="250"><br><center>BOLA1</center></td>
+    <td><img src="CYP4F3.jpg" alt="CYP4F3" width="250"><br><center>CYP4F3</center></td>
+    <td><img src="VEGFA.jpg" alt="VEGFA" width="250"><br><center>VEGFA</center></td>
+  </tr>
+</table>
 
 
 **Include prediction models**

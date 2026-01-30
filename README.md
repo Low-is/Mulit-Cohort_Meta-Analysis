@@ -89,7 +89,7 @@ This toolkit provides a robust framework for computing effect sizes, pooling met
 ---
 
 ## Future Directions 🚀:
-  - Include mulitple feature selection methods, deafult seeting is selecting shared genes across platforms before performing meta-analysis.
+  - Include mulitple feature selection methods, deafult setting is selecting shared genes across platforms before performing meta-analysis.
   - Additional machine learning algorithms optomized for diverse data types.
   - User-defined parameters will allow filtering by effect size thresholds and pooled effect size cutoffs.
   - Planned support for more data soures and processing methods, including ArrayExpress, GEO datasets with multiple platforms per study, and single-cell data.

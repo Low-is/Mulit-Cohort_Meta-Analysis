@@ -169,25 +169,8 @@ This toolkit supports:
 ⭐ Designed for **bioinformatics researchers**, **computational biologists**, and **data scientists working with genomic datasets**.
 
 
-## Key Features 🔑:
-1. # Data Normalization and Batch Correction
-  - Mitigates platform-specific variations using batch correction methods, median-centering, and rank-based gene transformations.
-  - Ensures comparability of expression measures across studies and platforms.
-2. # Gene-Level Effect Size Computation
-  - Calculates study-level effects for individual genes using metrics such as Hedge's g and Cohen's d, quantifying the magnitude of expression differences between conditions.
-  - Accounts for study-specfic variance using inverse-variance weigthing to manage heterogeneity across datasets. 
-3. # Meta-Analysis Across Studies
-  - Pools study-level effect sizes on a gene-wise basis.
-  - Combines p-values across studies and adjusts them for multiple testing to control the false discovery rate (FDR).
-  - Produces a list of "meta-genes" consistently associated with the condition or treatment of interest.
-4. # Statistical Testing and Visualization
-  - Performs t-tests while accommodating variances assumptions to determine statistical signficance. 
-  - Generates comprehensive outputs, including:
-      - Tables with effects sizes, summary effect sizes, p-values,and FDR-adjusted q-values.
-      - Forest plots summarizing gene-level and pooled effect sizes.
-5. # Predictive Modeling Integration
-- Meta-genes can be used to build early diagnostic or prognostic models.
-- Currently supports the ML algorithm, random forest, with customizable training control and optimized hyperparameter tuning grids.
+# Key Features 🔑:
+
 
 ## Applications 🖥️:
   - Identification of robust biomarkers across independent studies.
@@ -203,9 +186,9 @@ This toolkit supports:
 <!-- Forest plots side by side -->
 <table>
   <tr>
-    <td><img src="BOLA1.jpg" alt="BOLA1" width="250">></td>
-    <td><img src="CYP4F3.jpg" alt="CYP4F3" width="250"></td>
-    <td><img src="VEGFA.jpg" alt="VEGFA" width="250"></td>
+    <td><img src="docs/forest_plot/BOLA1.jpg" alt="BOLA1" width="250"></td>
+    <td><img src="docs/forest_plot/CYP4F3.jpg" alt="CYP4F3" width="250"></td>
+    <td><img src="docs/forest_plot/VEGFA.jpg" alt="VEGFA" width="250"></td>
   </tr>
 </table>
 

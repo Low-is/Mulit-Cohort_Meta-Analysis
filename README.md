@@ -186,9 +186,9 @@ This toolkit supports:
 <!-- Forest plots side by side -->
 <table>
   <tr>
-    <td><img src="docs/docs/forest_plots/BOLA1.jpg" alt="BOLA1" width="250"></td>
-    <td><img src="docs/docs/forest_plots/CYP4F3.jpg" alt="CYP4F3" width="250"></td>
-    <td><img src="docs/docs/forest_plots/VEGFA.jpg" alt="VEGFA" width="250"></td>
+    <td><img src="docs/forest_plots/BOLA1.jpg" alt="BOLA1" width="250"></td>
+    <td><img src="docs/forest_plots/CYP4F3.jpg" alt="CYP4F3" width="250"></td>
+    <td><img src="docs/forest_plots/VEGFA.jpg" alt="VEGFA" width="250"></td>
   </tr>
 </table>
 

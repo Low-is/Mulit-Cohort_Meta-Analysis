@@ -1,17 +1,13 @@
-# Pipeline Development - Multi Cohort Meta-analysis
-## Study level effect size and pooled effect size estimations, inverse variance weighting, and Fisher p-value combinataion.
+# 📊 Bioinformatics Multi-Cohort Meta-Analysis Toolkit
+
+This toolkit provides a framework for computing **effect sizes**, pooling **meta-analytic estimates**, and performing statistical analysis on **gene expression datasets**.
+
+It helps identify genes or gene sets with **consistent differential expression across multiple studies**, supporting **biomarker discovery** and **predictive modeling**.
 
 ## Tools Used
 ![R](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnubash&logoColor=white)
-
-
-# 📊 Bioinformatics Meta-Analysis Toolkit for Gene Expression
-
-This toolkit provides a framework for computing **effect sizes**, pooling **meta-analytic estimates**, and performing statistical analysis on **gene expression datasets**.
-
-It helps identify genes or gene sets with **consistent differential expression across multiple studies**, supporting **biomarker discovery** and **predictive modeling**.
 
 ---
 

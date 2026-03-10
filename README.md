@@ -170,6 +170,7 @@ This toolkit supports:
 
 
 # Key Features 🔑:
+[Add content here]
 
 
 ## Applications 🖥️:
@@ -201,7 +202,9 @@ This toolkit supports:
   - Include mulitple feature selection methods, deafult setting is selecting shared genes across platforms before performing meta-analysis.
   - Additional machine learning algorithms optomized for diverse data types.
   - User-defined parameters will allow filtering by effect size thresholds and pooled effect size cutoffs.
-  - Planned support for more data soures and processing methods, including ArrayExpress, GEO datasets with multiple platforms per study, and single-cell data.
+  - Adapt to other data types such as clinical data, single-cell RNA-Seq, spatial, proteomics, metabolomics, microbiome, GWAS, etc. 
+  - Planned support for more data soures, including ArrayExpress, TCGA, cBioPortal, etc.
+  - Eventually expand for exploratory analysis (LDA clustering), regression and classification task using ML. 
 
 
 

@@ -202,8 +202,16 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
       if (length(per_platform_mtx) == 0L) next
       
       if (length(per_platform_mtx) == 1L) {
+        
+        # ---------------------------
+        # SINGLE PLATFORM
+        # ---------------------------
         out_dna[[s]] <- per_platform_mtx[[1]]
       } else {
+        
+        # ---------------------------
+        # MULTI-PLATFORM STUDY
+        # ---------------------------
         gene_lists <- lapply(per_platform_mtx, rownames)
         common_genes <- Reduce(intersect, gene_lists)
         
@@ -215,9 +223,15 @@ generate_exprs_mtx <- function(DNA = NULL, RNA = NULL, dna_studies = list(), rna
           out_dna[[s]] <- per_platform_mtx[[1]]
         } else {
           per_platform_common <- lapply(per_platform_mtx, function(m) {
+            
+            # subset each platform to shared genes
             m_common <- m[common_genes, , drop = FALSE]
             m_common[common_genes, , drop = FALSE]
           })
+          
+          # ---------------------------
+          # Build COCONUT list
+          # ---------------------------
           combined_mtx <- do.call(cbind, per_platform_common)
           rownames(combined_mtx) <- common_genes
           out_dna[[s]] <- combined_mtx
@@ -704,92 +718,308 @@ find_common_genes <- function(
 # ---Meta-analysis function--- 
 ############################################
 
-meta_results <- function(list_of_studies) {
-
-  list_of_es <- lapply(list_of_studies, function(study) {
-    effect.sizes(study)
-  })
-
-  summary <- combine.effect.sizes(list_of_es)
-
-  # ----------------------------------
-  # Clean g and se.g
-  # ----------------------------------
-  # summary$g <- summary$g[!apply(is.na(summary$g) | is.infinite(summary$g), 1, any), ]
-  # summary$se.g <- summary$se.g[!apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any), ]
-
-  bad_g    <- apply(is.na(summary$g)    | is.infinite(summary$g),    1, any)
-  bad_se.g <- apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any)
-
-  keep <- !(bad_g | bad_se.g)
-
-  summary$g    <- summary$g[keep, , drop = FALSE]
-  summary$se.g <- summary$se.g[keep, , drop = FALSE]
-
-  g_genes <- rownames(summary$g)
-
-  summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
-  summary$pooled.estimates <- summary$pooled.estimates %>%
-    dplyr::filter(genes %in% g_genes)
-
-  summary$pooled.estimates <- summary$pooled.estimates %>%
-    dplyr::filter(!apply(is.na(.) | is.infinite(as.matrix(.)), 1, any))
-
-
-  num_cols <- sapply(summary$pooled.estimates, is.numeric)
-  summary$pooled.estimates[num_cols] <- lapply(
-    summary$pooled.estimates[num_cols],
-    function(x) ifelse(x == 0, 1e-200, x)
-  )
-
-  rownames(summary$pooled.estimates) <- summary$pooled.estimates$genes
-
-  g     <- summary$g
-  se.g  <- summary$se.g
-  pool    <- summary$pooled.estimates$summary
-  se.pool <- summary$pooled.estimates$se.summary
-  p.het   <- summary$pooled.estimates$pval.het
-
-  names(pool)    <- rownames(g)
-  names(se.pool) <- rownames(g)
-  names(p.het)   <- rownames(g)
-
-  # common_genes <- Reduce(intersect, lapply(list_of_studies, function(s) rownames(s$expr)))
-  # common_genes <- rownames(summary$g)
+# meta_results <- function(list_of_studies) {
+# 
+#   list_of_es <- lapply(list_of_studies, function(study) {
+#     effect.sizes(study)
+#   })
+# 
+#   summary <- combine.effect.sizes(list_of_es)
+# 
+#   # ----------------------------------
+#   # Clean g and se.g
+#   # ----------------------------------
+#   # summary$g <- summary$g[!apply(is.na(summary$g) | is.infinite(summary$g), 1, any), ]
+#   # summary$se.g <- summary$se.g[!apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any), ]
+# 
+#   # bad_g    <- apply(is.na(summary$g)    | is.infinite(summary$g),    1, any)
+#   # bad_se.g <- apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any)
+#   # 
+#   # keep <- !(bad_g | bad_se.g)
+#   # 
+#   # summary$g    <- summary$g[keep, , drop = FALSE]
+#   # summary$se.g <- summary$se.g[keep, , drop = FALSE]
+#   # 
+#   # g_genes <- rownames(summary$g)
+#   # 
+#   # summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
+#   # summary$pooled.estimates <- summary$pooled.estimates %>%
+#   #   dplyr::filter(genes %in% g_genes)
+#   # 
+#   # summary$pooled.estimates <- summary$pooled.estimates %>%
+#   #   dplyr::filter(!apply(is.na(.) | is.infinite(as.matrix(.)), 1, any))
+#   # 
+#   # 
+#   # num_cols <- sapply(summary$pooled.estimates, is.numeric)
+#   # summary$pooled.estimates[num_cols] <- lapply(
+#   #   summary$pooled.estimates[num_cols],
+#   #   function(x) ifelse(x == 0, 1e-200, x)
+#   # )
+#   # 
+#   # rownames(summary$pooled.estimates) <- summary$pooled.estimates$genes
+#   # 
+#   # g     <- summary$g
+#   # se.g  <- summary$se.g
+#   # pool    <- summary$pooled.estimates$summary
+#   # se.pool <- summary$pooled.estimates$se.summary
+#   # p.het   <- summary$pooled.estimates$pval.het
+#   # 
+#   # names(pool)    <- rownames(g)
+#   # names(se.pool) <- rownames(g)
+#   # names(p.het)   <- rownames(g)
+# 
+#   # common_genes <- Reduce(intersect, lapply(list_of_studies, function(s) rownames(s$expr)))
+#   # common_genes <- rownames(summary$g)
+#   
+#   # NEW
+#   # ----------------------------------
+#   # 1. Remove invalid rows from g and se.g
+#   # ----------------------------------
+#   
+#   bad_g    <- apply(is.na(summary$g)    | is.infinite(summary$g),    1, any)
+#   bad_se.g <- apply(is.na(summary$se.g) | is.infinite(summary$se.g), 1, any)
+#   
+#   keep <- !(bad_g | bad_se.g)
+#   
+#   summary$g    <- summary$g[keep, , drop = FALSE]
+#   summary$se.g <- summary$se.g[keep, , drop = FALSE]
+#   
+#   g_genes <- rownames(summary$g)
+#   
+#   # ----------------------------------
+#   # 2. Synchronize pooled.estimates with g
+#   # ----------------------------------
+#   
+#   summary$pooled.estimates$genes <- rownames(summary$pooled.estimates)
+#   
+#   
+#   # ----------------------------------
+#   # 3. Remove NA / infinite rows from pooled.estimates
+#   # ----------------------------------
+#   
+#   summary$pooled.estimates <- summary$pooled.estimates[keep, , drop = FALSE]
+#   
+#   # ----------------------------------
+#   # 4. Replace numeric zeros with small value
+#   # ----------------------------------
+#   
+#   num_cols <- sapply(summary$pooled.estimates, is.numeric)
+#   
+#   summary$pooled.estimates[num_cols] <- lapply(
+#     summary$pooled.estimates[num_cols],
+#     function(x) ifelse(x == 0, 1e-200, x)
+#   )
+#   
+#   # ----------------------------------
+#   # 5. Restore rownames
+#   # ----------------------------------
+#   
+#   rownames(summary$pooled.estimates) <- summary$pooled.estimates$genes
+#   
+#   # ----------------------------------
+#   # 6. Final synchronization of all objects
+#   # ----------------------------------
+#   
+#   # common_genes <- intersect(
+#   #   rownames(summary$g),
+#   #   rownames(summary$pooled.estimates)
+#   # )
+#   # 
+#   # summary$g    <- summary$g[common_genes, , drop = FALSE]
+#   # summary$se.g <- summary$se.g[common_genes, , drop = FALSE]
+#   # summary$pooled.estimates <- summary$pooled.estimates[common_genes, ]
+#   
+#   # ----------------------------------
+#   # 7. Extract vectors for meta-analysis
+#   # ----------------------------------
+#   
+#   g     <- summary$g
+#   se.g  <- summary$se.g
+#   
+#   pool    <- summary$pooled.estimates$summary
+#   se.pool <- summary$pooled.estimates$se.summary
+#   p.het   <- summary$pooled.estimates$pval.het
+#   
+#   names(pool)    <- rownames(summary$pooled.estimates)
+#   names(se.pool) <- rownames(summary$pooled.estimates)
+#   names(p.het)   <- rownames(summary$pooled.estimates)
+#   # NEW
+#   
+#   
+#   # ----------------------------------
+#   # NEW: confidence intervals
+#   # ----------------------------------
+#   lower_CI <- pool - 1.96 * se.pool
+#   upper_CI <- pool + 1.96 * se.pool
+#   
+# 
+#   
+#   # ----------------------------------
+#   # Pre-filter genes for p-value computation
+#   # ----------------------------------
+#   # Pre-filter genes for p-value computation
+#   robust_idx      <- abs(pool) > 0.5
+#   candidate_genes <- names(pool)[robust_idx]
+#   
+#   # Align candidate_genes with rows present in pooled.estimates
+#   candidate_genes <- intersect(
+#     candidate_genes,
+#     rownames(summary$pooled.estimates)
+#   )
+#   
+#   
+#   ## --- GLOBAL SANITY CHECK BLOCK ---------------------------------
+#   cat("\n================ META SANITY CHECK ================\n")
+#   
+#   # 1) Basic sizes
+#   cat("nrow(summary$pooled.estimates):", nrow(summary$pooled.estimates), "\n")
+#   cat("nrow(summary$g):",              nrow(summary$g), "\n")
+#   cat("nrow(summary$se.g):",           nrow(summary$se.g), "\n")
+#   
+#   # 2) Names consistency
+#   cat("length(pool):",     length(pool), "\n")
+#   cat("length(se.pool):",  length(se.pool), "\n")
+#   cat("length(p.het):",    length(p.het), "\n")
+#   cat("length(lower_CI):", length(lower_CI), "\n")
+#   cat("length(upper_CI):", length(upper_CI), "\n")
+#   
+#   cat("all(names(pool)    %in% rownames(summary$pooled.estimates)):",
+#       all(names(pool)    %in% rownames(summary$pooled.estimates)), "\n")
+#   cat("all(names(se.pool) %in% rownames(summary$pooled.estimates)):",
+#       all(names(se.pool) %in% rownames(summary$pooled.estimates)), "\n")
+#   cat("all(names(p.het)   %in% rownames(summary$pooled.estimates)):",
+#       all(names(p.het)   %in% rownames(summary$pooled.estimates)), "\n")
+#   
+#   # 3) Candidate genes
+#   cat("length(candidate_genes):", length(candidate_genes), "\n")
+#   cat("length(unique(candidate_genes)):", length(unique(candidate_genes)), "\n")
+#   cat("all(candidate_genes %in% rownames(summary$pooled.estimates)):",
+#       all(candidate_genes %in% rownames(summary$pooled.estimates)), "\n")
+#   cat("any(duplicated(candidate_genes)):",
+#       any(duplicated(candidate_genes)), "\n")
+#   
+#   # 4) p‑value vectors (only if they exist)
+#   if (exists("combined_pvals")) {
+#     cat("length(combined_pvals):", length(combined_pvals), "\n")
+#   }
+#   if (exists("fdr")) {
+#     cat("length(fdr):", length(fdr), "\n")
+#   }
+#   
+#   # 5) What will be assigned where
+#   cat("\n--- planned assignments ---\n")
+#   cat("pooled_pval index size (candidate_genes):", length(candidate_genes), "\n")
+#   cat("FDR index size (candidate_genes):",         length(candidate_genes), "\n")
+#   cat("lower_CI size:", length(lower_CI), " | upper_CI size:", length(upper_CI), "\n")
+#   
+#   cat("===================================================\n\n")
+#   ## --- END GLOBAL SANITY CHECK BLOCK ------------------------------
+#   
+#   # summary$pooled.estimates$pooled_pval <- NA_real_
+#   # summary$pooled.estimates$FDR         <- NA_real_
+#   
+#   summary$pooled.estimates <- summary$pooled.estimates[candidate_genes, ]
+#   
+#   study_pvals <- get.ttest.P(study$expr[candidate_genes, , drop = FALSE],
+#                      study$class)[, "P.both"]
+#   
+#   
+#   # if (length(candidate_genes) > 0) {
+#   #   
+#   #   study_pvals <- lapply(list_of_studies, function(study) {
+#   #     
+#   #     genes_here <- intersect(
+#   #       candidate_genes,
+#   #       rownames(study$expr)
+#   #     )
+#   # 
+#   #     
+#   #     pvals <- rep(NA_real_, length(candidate_genes))
+#   #     names(pvals) <- candidate_genes
+#   #     
+#   #     if (length(genes_here) > 0) {
+#   #       tmp <- get.ttest.P(
+#   #         study$expr[genes_here, , drop = FALSE],
+#   #         study$class
+#   #       )[ , "P.both"]
+#   #       
+#   #       pvals[genes_here] <- tmp
+#   #     }
+#   #     
+#   #     pvals
+#   #   })
+#     
+#     pval_matrix <- do.call(cbind, study_pvals)
+#     
+#     # Remove rows with all-NA pvals are dropped before metap
+#     valid_rows <- apply(!is.na(pval_matrix), 1, any)
+#     
+#     combined_pvals <- rep(NA_real_, length(candidate_genes))
+#     names(combined_pvals) <- candidate_genes
+#   
+#     
+#     if (any(valid_rows)) {
+#       combined_pvals[valid_rows] <- apply(
+#         pval_matrix[valid_rows, , drop = FALSE],
+#         1,
+#         function(pvec) metap::sumlog(pvec[!is.na(pvec)])$p
+#       )
+#     }
+#     
+#     cat("combined_pvals:", length(combined_pvals), "\n")
+#     cat("study_pvals:", length(study_pvals), "\n")
+#     cat("summary$pooled.estimates$pooled_pval:", length(summary$pooled.estimates$pooled_pval), "\n")
+#     
+#     
+#     fdr <- rep(NA_real_, length(candidate_genes))
+#     
+#     names(fdr) <- candidate_genes
+#     
+#     if (any(!is.na(combined_pvals))) {
+#       fdr[!is.na(combined_pvals)] <-
+#         p.adjust(combined_pvals[!is.na(combined_pvals)], method = "fdr")
+#     }
+#     
+#     # Now assignment is safe: lengths match subset size
+#     summary$pooled.estimates$pooled_pval[candidate_genes] <- combined_pvals
+#     summary$pooled.estimates$FDR[candidate_genes]         <- fdr
+#   
+#   
+#   
   
-  # ----------------------------------
-  # NEW: confidence intervals
-  # ----------------------------------
-  lower_CI <- pool - 1.96 * se.pool
-  upper_CI <- pool + 1.96 * se.pool
+  # robust_idx <- abs(pool) > 0.5
+  # candidate_genes <- names(pool)[robust_idx]
+  # 
+  # summary$pooled.estimates$pooled_pval <- NA
+  # summary$pooled.estimates$FDR <- NA
+  # 
+  # 
+  # if(length(candidate_genes) > 0){
+  #   
+  #   study_pvals <- lapply(list_of_studies, function(study) {
+  #     get.ttest.P(study$expr[candidate_genes, , drop=FALSE], study$class)[, "P.both"]
+  #   })
+  #   
+  #   pval_matrix <- do.call(cbind, study_pvals)
+  #   
+  #   combined_pvals <- apply(pval_matrix, 1, function(pvec)
+  #     metap::sumlog(pvec)$p)
+  #   
+  #   fdr <- p.adjust(combined_pvals, method="fdr")
+  #   
+  #   summary$pooled.estimates$pooled_pval[candidate_genes] <- combined_pvals
+  #   summary$pooled.estimates$FDR[candidate_genes] <- fdr
+  #   
+  #   # summary$pooled.estimates$pooled_pval <- combined_pvals
+  #   # summary$pooled.estimates$FDR <- fdr
+  # }
+  # 
+  # 
+  # summary$pooled.estimates$lower_CI <- lower_CI
+  # summary$pooled.estimates$upper_CI <- upper_CI
   
-
-  
-  # ----------------------------------
-  # Filter by effect size first
-  # ----------------------------------
-  robust_idx <- abs(pool) > 0.5
-  robust_genes <- rownames(summary$pooled.estimates)[robust_idx]
-  
-  
-  if (length(robust_genes) > 0) {
-    common_genes <- robust_genes
-  
-  # Compute p-values only for filtered genes
-  study_pvals <- lapply(list_of_studies, function(study) {
-    get.ttest.P(study$expr[common_genes, , drop=FALSE], study$class)[, "P.both"]
-  })
-
-  pval_matrix <- do.call(cbind, study_pvals)
-  combined_pvals <- apply(pval_matrix, 1, function(pvec) metap::sumlog(pvec)$p)
-  fdr <- p.adjust(combined_pvals, method = "fdr")
-
-  summary$pooled.estimates$pooled_pval <- combined_pvals
-  summary$pooled.estimates$FDR <- fdr
-  }
-
-  summary$pooled.estimates$lower_CI <- lower_CI
-  summary$pooled.estimates$upper_CI <- upper_CI
+  # summary$pooled.estimates$lower_CI <- lower_CI[robust_idx]
+  # summary$pooled.estimates$upper_CI <- upper_CI[robust_idx]
 
   # ----------------------------------
   # Robust gene selection
@@ -853,13 +1083,15 @@ meta_results <- function(list_of_studies) {
   #   )
   #   dev.off()
   # }
+  
+  
 
-  list(
-    summary          = summary,
-    pooled_estimates = summary$pooled.estimates,
-    robust_genes     = robust_genes
-  )
-}
+#   list(
+#     summary          = summary,
+#     pooled_estimates = summary$pooled.estimates,
+#     robust_genes     = robust_genes
+#   )
+# }
 
 # Refer to Processing_Results.R script | 3-6-2026
 
@@ -2132,8 +2364,8 @@ plot_immune_deconv_list <- function(
 ############################################ 
 # ---Removing invalid samples---
 ############################################ 
-expr_list <- matrices_dna[c("GSE25504", "GSE32472")]
-pdata_list <- sepsis_pData_dna[c("GSE25504", "GSE32472")]
+# expr_list <- matrices_dna[c("GSE25504", "GSE32472")]
+# pdata_list <- sepsis_pData_dna[c("GSE25504", "GSE32472")]
 
 clean_study_for_meta <- function(expr_list, pdata_list, id_col = "gsm") {
   cleaned_expr  <- list()
@@ -2294,3 +2526,128 @@ check_gsm_overlap <- function(list_of_pData, gsm_col = "gsm") {
 # Usage
 # check_gsm_overlap(sepsis_pData_dna)
 # No overlapping GSMs
+
+
+############################################
+# ---Labeled PCA (LDA - Linear Discriminant Analysis)---
+############################################
+build_multicohort_dataset <- function(expr_list,
+                                      pdata_list,
+                                      genes,  # REQUIRED: robust genes from meta-analysis
+                                      condition_col = "condition") {
+  
+  studies <- names(expr_list)
+  names(pdata_list) <- studies
+  
+  
+  # --------------------------
+  # Subset expression matrices to robust genes
+  # --------------------------
+  expr_list <- lapply(expr_list, function(m){
+    # Only keep genes in 'genes' that exist in this matrix
+    m[intersect(genes, rownames(m)), , drop = FALSE]
+  })
+  
+  # --------------------------
+  # Combine matrices
+  # --------------------------
+  combined_matrix <- do.call(cbind, expr_list)   # genes x samples
+  
+  # --------------------------
+  # Batch labels
+  # --------------------------
+  batch <- unlist(
+    mapply(function(m, study){
+      rep(study, ncol(m))
+    }, expr_list, studies, SIMPLIFY = FALSE)
+  )
+  
+  # --------------------------
+  # Build metadata
+  # --------------------------
+  metadata <- do.call(rbind, lapply(seq_along(pdata_list), function(i){
+    p <- pdata_list[[i]]
+    data.frame(
+      response = p[[condition_col]],
+      study = studies[i],
+      stringsAsFactors = FALSE
+    )
+  }))
+  
+  rownames(metadata) <- colnames(combined_matrix)
+  
+  # --------------------------
+  # Batch correction
+  # --------------------------
+  design <- model.matrix(~ response, data = metadata)
+  batch_corrected <- limma::removeBatchEffect(
+    combined_matrix,
+    batch = batch,
+    design = design
+  )
+  
+  # --------------------------
+  # ML-ready dataframe
+  # --------------------------
+  features <- t(batch_corrected)   # samples x genes
+  multicohort_df <- cbind(metadata, features)
+  
+  # --------------------------
+  # Return
+  # --------------------------
+  list(
+    expression = batch_corrected,
+    features = features,
+    metadata = metadata,
+    data = multicohort_df,
+    batch = batch
+  )
+}
+
+
+# features <- multicohort_df2 %>%
+#   dplyr::select(-response, -study) %>% 
+#   as.matrix()
+# 
+# labels <- case_when(multicohort_df2$response == "Control" ~ "Healthy Ctrl",
+#                     multicohort_df2$response == "Case1" ~ "BPD",
+#                     multicohort_df2$response == "Case2" ~ "Sepsis")
+# 
+# features_scaled <- scale(features)
+# lda_res <- lda(labels ~ ., data = data.frame(features_scaled, labels = labels))
+# 
+# # Project the data onto LDA axes
+# lda_pred <- predict(lda_res)$x
+# lda_df <- data.frame(lda_pred, response = labels, study = multicohort_df2$study)
+
+
+# Plotting
+# png("\\\\ifs.win.uthscsa.edu/M1509-AhujaS/MainShare/Lois/Lois_Local/Dr_M/Projects/Neonatal_Sepsis/Figures/Prediction_Model/Multiclassification_ROC_curves/PCA_validation.png",
+#     height = 8,
+#     width = 8,
+#     units = "in",
+#     res = 800)
+# ggplot(lda_df, aes(x = LD1, y = LD2, color = response)) +
+#   geom_point(size = 3, alpha = 0.8) +
+#   theme_classic(base_size = 14) +
+#   theme(plot.margin = unit(c(1,1,1,1), "inches"),
+#         panel.border = element_rect(color = "black", linewidth = 2),
+#         legend.title = element_blank(),
+#         legend.position = "inside",
+#         legend.position.inside = c(.87, .1),
+#         legend.background = element_rect(
+#           fill = "white",
+#           color = "black",
+#           linewidth = 0.5,
+#           linetype = "solid"
+#         ),
+#         legend.key = element_rect(fill = "white")) +
+#   labs(x = "PC1",
+#        y = "PC2",
+#        color = "Condition") +
+#   scale_color_manual(values = c("Healthy Ctrl" = "green3", "BPD" = "mediumpurple", "Sepsis" = "sienna3"))
+# dev.off()
+
+############################################
+# ---Labeled PCA (LDA - Linear Discriminant Analysis)---
+############################################

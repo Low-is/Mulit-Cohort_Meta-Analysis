@@ -1,1 +1,12 @@
 # config
+
+analysis:
+  modalities:
+    DNA: true
+    RNA: true
+
+  use_DEG: false
+
+  studies:
+    DNA:
+    
